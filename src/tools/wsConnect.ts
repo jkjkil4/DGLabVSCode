@@ -144,7 +144,7 @@ export class WSClient {
             } else {
                 logger.error("未设置基础强度");
             }
-            
+
             this.vscode.window.showInformationMessage(`成功连接到ClientId:${message.clientId}，targetId:${message.targetId}`);
         }
     }
@@ -167,7 +167,8 @@ export class WSClient {
                     logger.debug("未连接任何设备或强度已满");
                     return;
                 }
-                this.addStrengthInterval += 1;
+                this.addStrengthInterval = 0;
+                // this.addStrengthInterval += 1;
                 logger.info(`基础强度+${this.addStrengthInterval}`);
                 this.setStrength(1, 4, config.strength + this.addStrengthInterval);
                 this.setStrength(2, 4, config.strength + this.addStrengthInterval);
@@ -226,7 +227,7 @@ export class WSClient {
             } else {
                 this.sendJsonMessage({ type: 'clientMsg', channel: 'A', clientId, targetId, message: 'A:' + JSON.stringify(wave), time });
                 this.sendJsonMessage({ type: 'clientMsg', channel: 'B', clientId, targetId, message: 'B:' + JSON.stringify(wave), time });
-            }   
+            }
         }
     }
 
@@ -246,7 +247,7 @@ export class WSClient {
         }
         this.clearAllWave();
         const config = this.getConfig();
-        
+
         if (!config) {
             logger.error("获取配置失败");
             return;
@@ -262,7 +263,7 @@ export class WSClient {
         await wait(600);
         this.setStrength(1, 4, orS);
         this.setStrength(2, 4, orS);
-        
+
         logger.info(`已发送一键开火，强度${strength + orS}`);
         return true;
     }
@@ -336,7 +337,7 @@ export class WSClient {
         return this.connectMap;
     }
 }
-        
+
 function wait(ms: number | undefined) {
     return new Promise<void>(resolve => setTimeout(() => resolve(), ms));
 }
